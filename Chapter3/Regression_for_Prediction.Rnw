@@ -1,0 +1,322 @@
+%\VignetteEngine{knitr::knitr}
+
+\documentclass[12pt,reqno]{article}
+
+% ------------------ %
+%   Functionalities  %
+% ------------------ %
+
+\usepackage{standalone} % To source LaTeX code
+\usepackage{import} % To source LaTeX code
+
+% ------------ %
+%   Language   %
+% ------------ %
+
+\usepackage[english]{babel} % Languague for the sections
+\usepackage[latin1]{inputenc} % Accents
+\usepackage{lmodern}
+
+% ------------- %
+%  Mathematics  %
+% ------------- %
+
+\usepackage{amsmath}
+\usepackage{amsthm} % For the theorems
+\usepackage{amssymb}
+\usepackage{amsfonts} % For the real symbol
+\usepackage{mathrsfs} % For the sigma-algebra letter
+\usepackage{thmtools} % Theorem customization
+
+% ----------- %
+%  Graphics   %
+% ----------- %
+
+\usepackage{graphicx} % To inset graphs
+\usepackage{subcaption} % To set several graphs in one page
+\usepackage{placeins} % The graph is here and nowhere else
+\usepackage{tikz} % To draw pictures like sets and decision trees
+\usepackage{float} % To force graphs in a specific place
+\usetikzlibrary{arrows}
+\newcommand{\degre}{\ensuremath{^\circ}}
+
+% ---------- %
+%   Tables   %
+% ---------- %
+
+\usepackage{booktabs} % Enhances the quality of tables
+\usepackage{multirow} % Columns spanning multiple rows
+\usepackage{anysize} % Margins
+\usepackage[flushleft]{threeparttable} % Comments at the end of the table
+
+% ------- %
+%  Style  %
+% ------- %
+
+\usepackage{color} % To add a bit of color to your document
+\usepackage{titlesec} % Titles in sections
+\usepackage[authoryear,round]{natbib} %Citations
+\usepackage{bm} % bold italics in mathmode
+\usepackage{geometry} % Margins and page layout
+\usepackage{comment} % To comment sections
+\usepackage{hyperref} % For hyperlinks in the PDF
+\usepackage{epigraph} % Inspirational quote at the beginning of chapter
+\usepackage{etoolbox}
+\usepackage{footmisc} % Changing thanks symbol to dagger
+\usepackage{titling} % For changing the color of the thanks symbol
+\usepackage{enumerate} % To customize the appearance of the enumerator
+\usepackage{csquotes} % To insert quotes
+%\usepackage[blocks]{authblk} % To include more than one author
+
+
+% ------------- %
+% User specific %
+% ------------- %
+
+
+% ------------- %
+%   Settings    %
+% ------------- %
+
+
+% Margins %
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+
+% Itemization %
+\renewcommand{\labelitemi}{$\bullet$}
+
+% Hyperlinks %
+\definecolor{Red}{rgb}{0.5,0,0}
+\definecolor{Blue}{rgb}{0,0,0.5}
+\hypersetup{
+      colorlinks = true,
+      urlcolor = blue,
+      linkcolor = blue,
+      citecolor = blue,
+      pdfauthor = {Ignacio Sarmiento-Barbieri},
+      pdfkeywords = {econometrics, regression},
+      pdfpagemode = UseNone
+      }
+
+% Redefine the bold in math mode
+\newcommand{\bb}[1]{\mathbf{#1}} % Bold in mathmode, useful for matrices
+
+
+% ---------------------------------------%
+% Theorems, propositions and definitions %
+% -------------------------------------- %
+
+\newtheorem{theo}{Theorem}
+\newtheorem{lem}{Lemma}[subsection]
+\newtheorem{defi}{Definition}[subsection]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{claim}{Claim}
+\newtheorem{ex}[section]{Example}
+
+
+\declaretheoremstyle[
+  spaceabove = 8pt,
+  spacebelow = 8pt,
+  headfont=\color{black}\bfseries,
+  bodyfont=\normalfont,
+  qed=$\blacksquare$,
+  ]{remark_style}
+
+\declaretheorem[style=remark_style,within=section]{remark}
+\declaretheorem[style=remark_style,within=section]{assumption}
+
+
+\newtheorem{p}{Problem}
+\newenvironment{s}{%\small%
+        \begin{trivlist} \item \textbf{Solution}. }{%
+            \hspace*{\fill} $\Box$\end{trivlist}}%
+\newenvironment{pr}{%\small%
+        \begin{trivlist} \item \textcolor{magenta}{Proof of} }{%
+            \hspace*{\fill} $\Box$\end{trivlist}}%
+
+
+%------------ %
+%   Symbols   %
+%------------ %
+
+% Moments %
+\DeclareMathOperator*{\E}{\mathbb{E}}
+\DeclareMathOperator*{\En}{\mathbb{E}_{n}}
+
+\DeclareMathOperator*{\V}{\mathbb{V}}
+\DeclareMathOperator*{\Vn}{\mathbb{V}_{n}}
+
+\DeclareMathOperator*{\C}{\mathbb{C}}
+\DeclareMathOperator*{\Cn}{\mathbb{C}_{n}}
+
+% Argmin %
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% Probability theory %
+\DeclareMathOperator*{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\plim}{\overset{P}{\rightarrow}}
+\DeclareMathOperator*{\dlim}{\overset{d}{\rightarrow}}
+\DeclareMathOperator*{\asynorm}{\overset{d}{\rightarrow}\mathcal{N}}
+
+
+% Thanks symbol to dagger %
+\DefineFNsymbols{mySymbols}{{\ensuremath\dagger}{\ensuremath\ddagger}\S\P
+   *{**}{\ensuremath{\dagger\dagger}}{\ensuremath{\ddagger\ddagger}}}
+\setfnsymbol{mySymbols}
+
+\thanksmarkseries{fnsymbol} %To change the color of the thanks mark
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     			TITLE, AUTHORS AND DATE    			  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Title, authors and date
+\title{\Large \texttt{Lab}: Regression for Prediction}
+\author{}
+\date{}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+
+
+
+
+
+% ----------------------------------------------------------------- %
+% ----------------------------------------------------------------- %
+
+<<preliminaries, echo=FALSE, warning = FALSE, message = FALSE, results='hide'>>=
+#knitr::render_sweave()
+options(prompt = "R> ", continue = "+  ", digits=3)
+setwd("~/Dropbox/Phd Illinois/Research/ISLR_WALTER/LIBRO/Tutorials/Chp3/")
+@
+
+
+%-------------- %
+% Introduction  %
+% ------------- %
+
+\section{Introduction} \label{sec: introduction}
+
+In this lab we are going to focus on predicting house prices with the tools described in the chapter. The interest in predicting house prices is not new, but it's has proven to be a quite challenging problem where machine learning may have some interesting input. For example the  data science competitions company \href{https://www.kaggle.com}{Kaggle} is hosting a competition desined to improve \href{https://www.kaggle.com/c/zillow-prize-1}{Zillow's Home Value} estimates with a prize of one million dollars.
+ 
+We consider the data set included in the  \texttt{McSpatial package} \citep{mcmspatial} for \texttt{R}. The data includes sales prices, structural characteristics and geo-location of single-family homes on the Far North Side of Chicago sold in 1995 and 2005. We randomly divided the sample into a trianing and a testing sample.
+
+
+
+<<load_data, tidy=TRUE,highlight=TRUE>>=
+load("house_data.rda")
+ls()
+@
+
+% <<descriptive, echo=T, results='asis'>>=
+% stargazer::stargazer(train, header=FALSE, type='latex')
+% @
+
+\section{Linear Regression}
+\subsection{MSE and regression}
+
+The objective then is to be able to get the best prediction of house prices. We begin by using a simple model with no covariates, just a constant
+
+<<nocov, tidy=TRUE,highlight=TRUE>>=
+model1<-lm(lnprice~1,data=train)
+summary(model1)
+@
+
+In this case our prediction for the log price is the average train sample average
+
+
+\begin{align}\label{eq: house_price}
+\hat{y}=\hat{\beta_1}=\frac{\sum y_i}{n}=m
+\end{align}
+
+<<mean_mod1, tidy=F,highlight=TRUE>>=
+coef(model1)
+mean(train$lnprice)
+@
+
+But we are concernded on predicting well our of sample, so we need to evaluate our model in the testing data 
+
+<<>>=
+test$model1<-predict(model1,newdata = test)
+with(test,mean((lnprice-model1)^2))
+@
+
+Then the $MSE=E(y-\hat{y})=E(y-m)=$\Sexpr{with(test,mean((lnprice-model1)^2))}. This is our starting point, then the question is how can we improve it.
+
+\subsection{Complexity}
+
+To improve our prediction we can start adding variables and thus \textit{building} $f$. The standard approach to build $f$ would be using a hedonic house price function derived directly from the theory of hedonic pricing (\cite{rosen1974hedonic}). In its basic form the hedonic price function is linear in the explanatory characteristics
+
+\begin{align}\label{eq: house_price}
+y=\beta_1+\beta_2 x_2 + \dots + \beta_K x_k +u
+\end{align}
+
+where $y$ is ussually the log of the sale price, and $x_1  \dots x_k$ are attributes of the house, like  structural characteristics and it's location. So estimating an hedonic price function seems a good idea to start with. 
+However, the theory says little on what are the relevant attributes of the house. So we are going to procede with one foot in the theory and one foot in the data, to guide us in building $f$.
+
+We begin by showing that the simple inclusion of a single covariate reduces the MSE with respect to the \textit{naive} model that used the sample mean.
+<<onecov, tidy=TRUE,highlight=TRUE>>=
+model2<-lm(lnprice~bedrooms,data=train)
+test$model2<-predict(model2,newdata = test)
+with(test,mean((lnprice-model2)^2))
+@
+
+What about if we include more variables? 
+<<twocov, tidy=TRUE,highlight=TRUE>>=
+model3<-lm(lnprice~bedrooms+bathrooms+centair+fireplace+brick+age,data=train)
+test$model3<-predict(model3,newdata = test)
+with(test,mean((lnprice-model3)^2))
+@
+
+<<nonlinear, echo=F>>=
+model4<-lm(lnprice~bedrooms+bathrooms+centair+fireplace+brick+poly(age,2),data=train)
+test$model4<-predict(model4,newdata = test)
+
+@
+
+Note that the MSE is once more reduced. What about if we include some non linear variables, like $age$ and $age^2$?. Then the MSE for model 3 goes from  \Sexpr{with(test,mean((lnprice-model3)^2))} to \Sexpr{with(test,mean((lnprice-model4)^2))}. In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.
+
+
+
+
+\subsection{Non-linear models}
+
+
+In practice empirical researches have recognized that hedonic house functions are likely to be nonlinear in structural characteristics, specially when it comes to continuous measures of location variables such as distance from the city center \citep{mcmillen2010estimation}.
+
+\,
+\,
+
+\begin{itemize}
+  \item Idea Show examples of other models
+  
+\end{itemize}
+%It is clear that we have a wide \textit{pallete} of models to choose from. But the question is how do we choose from. And this is where supervised machine learning can give some guidance.
+
+\section{Comparison on the models}
+
+% ----------------- %
+%     References    %
+% ----------------- %
+
+\pagebreak
+\bibliographystyle{apalike}
+\bibliography{chp3}
+
+
+
+
+
+
+\end{document}
+
+
+
+
