@@ -1,0 +1,108 @@
+
+# Lab 3: Regression for prediction
+
+## Introduction {#sec:introduction}
+
+In this lab we are going to focus on predicting house prices with the tools described in the chapter. The interest in predicting house prices is not new, but it's has proven to be a quite challenging problem where machine learning may have some interesting input. For example the  data science competitions company \href{https://www.kaggle.com}{Kaggle} is hosting a competition desined to improve \href{https://www.kaggle.com/c/zillow-prize-1}{Zillow's Home Value} estimates with a prize of one million dollars.
+ 
+We consider the data set included in the  \texttt{McSpatial package} \citep{mcmspatial} for \texttt{R}. The data includes sales prices, structural characteristics and geo-location of single-family homes on the Far North Side of Chicago sold in 1995 and 2005. We randomly divided the sample into a trianing and a testing sample.
+
+
+
+```{r}
+load("house_data.rda")
+ls()
+```
+
+```{r}
+stargazer::stargazer(train, header=FALSE, type='latex')
+```
+
+## Linear Regression
+### MSE and regression
+
+The objective then is to be able to get the best prediction of house prices. We begin by using a simple model with no covariates, just a constant
+
+```{r}
+model1<-lm(lnprice~1,data=train)
+summary(model1)
+```
+
+In this case our prediction for the log price is the average train sample average
+
+
+\begin{align}\label{eq: house_price}
+\hat{y}=\hat{\beta_1}=\frac{\sum y_i}{n}=m
+\end{align}
+
+```{r}
+coef(model1)
+mean(train$lnprice)
+```
+
+But we are concernded on predicting well our of sample, so we need to evaluate our model in the testing data 
+
+```{r}
+test$model1<-predict(model1,newdata = test)
+with(test,mean((lnprice-model1)^2))
+```
+
+Then the $MSE=E(y-\hat{y})=E(y-m)=$\Sexpr{with(test,mean((lnprice-model1)^2))}. This is our starting point, then the question is how can we improve it.
+
+###Complexity
+
+To improve our prediction we can start adding variables and thus \textit{building} $f$. The standard approach to build $f$ would be using a hedonic house price function derived directly from the theory of hedonic pricing ([@rosen1974hedonic]). In its basic form the hedonic price function is linear in the explanatory characteristics
+
+\begin{align}\label{eq: house_price}
+y=\beta_1+\beta_2 x_2 + \dots + \beta_K x_k +u
+\end{align}
+
+where $y$ is ussually the log of the sale price, and $x_1  \dots x_k$ are attributes of the house, like  structural characteristics and it's location. So estimating an hedonic price function seems a good idea to start with. 
+However, the theory says little on what are the relevant attributes of the house. So we are going to procede with one foot in the theory and one foot in the data, to guide us in building $f$.
+
+We begin by showing that the simple inclusion of a single covariate reduces the MSE with respect to the \textit{naive} model that used the sample mean.
+
+```{r}
+model2<-lm(lnprice~bedrooms,data=train)
+test$model2<-predict(model2,newdata = test)
+with(test,mean((lnprice-model2)^2))
+```
+
+What about if we include more variables? 
+
+```{r}
+model3<-lm(lnprice~bedrooms+bathrooms+centair+fireplace+brick+age,data=train)
+test$model3<-predict(model3,newdata = test)
+with(test,mean((lnprice-model3)^2))
+```
+
+
+```{r}
+model4<-lm(lnprice~bedrooms+bathrooms+centair+fireplace+brick+poly(age,2),data=train)
+test$model4<-predict(model4,newdata = test)
+```
+
+
+
+Note that the MSE is once more reduced. What about if we include some non linear variables, like $age$ and $age^2$?. Then the MSE for model 3 goes from  \Sexpr{with(test,mean((lnprice-model3)^2))} to \Sexpr{with(test,mean((lnprice-model4)^2))}. In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.
+
+
+
+
+### Non-linear models
+
+
+In practice empirical researches have recognized that hedonic house functions are likely to be nonlinear in structural characteristics, specially when it comes to continuous measures of location variables such as distance from the city center [@mcmillen2010estimation].
+
+
+
+* Idea Show examples of other models
+  
+
+It is clear that we have a wide *pallete* of models to choose from. But the question is how do we choose from. And this is where supervised machine learning can give some guidance.
+
+### Comparison on the models
+
+
+
+
