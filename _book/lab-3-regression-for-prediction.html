@@ -24,7 +24,7 @@
 <meta name="author" content="Ignacio Sarmiento Barbieri" />
 
 
-<meta name="date" content="2020-06-10" />
+<meta name="date" content="2020-06-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -137,8 +137,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#sec:introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
 <li class="chapter" data-level="3.2" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#linear-regression"><i class="fa fa-check"></i><b>3.2</b> Linear Regression</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#mse-and-regression"><i class="fa fa-check"></i><b>3.2.1</b> MSE and regression</a></li>
-<li class="chapter" data-level="3.2.2" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#non-linear-models"><i class="fa fa-check"></i><b>3.2.2</b> Non-linear models</a></li>
-<li class="chapter" data-level="3.2.3" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#comparison-on-the-models"><i class="fa fa-check"></i><b>3.2.3</b> Comparison on the models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#complexity"><i class="fa fa-check"></i><b>3.2.2</b> Complexity</a></li>
+<li class="chapter" data-level="3.2.3" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#non-linear-models"><i class="fa fa-check"></i><b>3.2.3</b> Non-linear models</a></li>
+<li class="chapter" data-level="3.2.4" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#comparison-on-the-models"><i class="fa fa-check"></i><b>3.2.4</b> Comparison on the models</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -225,9 +226,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ## Residual standard error: 0.5244 on 2703 degrees of freedom</code></pre>
 <p>In this case our prediction for the log price is the average train sample average</p>
-<p><span class="math display">\[\begin{align}\label{eq: house_price}
+<p><span class="math display">\[
 \hat{y}=\hat{\beta_1}=\frac{\sum y_i}{n}=m
-\end{align}\]</span></p>
+\]</span></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">coef</span>(model1)</a></code></pre></div>
 <pre><code>## (Intercept) 
 ##    12.40533</code></pre>
@@ -238,11 +239,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">with</span>(test,<span class="kw">mean</span>((lnprice<span class="op">-</span>model1)<span class="op">^</span><span class="dv">2</span>))</a></code></pre></div>
 <pre><code>## [1] 0.2857339</code></pre>
 <p>Then the <span class="math inline">\(MSE=E(y-\hat{y})=E(y-m)=\)</span>. This is our starting point, then the question is how can we improve it.</p>
-<p>###Complexity</p>
+</div>
+<div id="complexity" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Complexity</h3>
 <p>To improve our prediction we can start adding variables and thus  <span class="math inline">\(f\)</span>. The standard approach to build <span class="math inline">\(f\)</span> would be using a hedonic house price function derived directly from the theory of hedonic pricing (<span class="citation">(<span class="citeproc-not-found" data-reference-id="rosen1974hedonic"><strong>???</strong></span>)</span>). In its basic form the hedonic price function is linear in the explanatory characteristics</p>
-<p><span class="math display">\[\begin{align}\label{eq: house_price}
+<p><span class="math display">\[
 y=\beta_1+\beta_2 x_2 + \dots + \beta_K x_k +u
-\end{align}\]</span></p>
+ \]</span></p>
 <p>where <span class="math inline">\(y\)</span> is ussually the log of the sale price, and <span class="math inline">\(x_1 \dots x_k\)</span> are attributes of the house, like structural characteristics and it’s location. So estimating an hedonic price function seems a good idea to start with.
 However, the theory says little on what are the relevant attributes of the house. So we are going to procede with one foot in the theory and one foot in the data, to guide us in building <span class="math inline">\(f\)</span>.</p>
 <p>We begin by showing that the simple inclusion of a single covariate reduces the MSE with respect to the  model that used the sample mean.</p>
@@ -260,7 +263,7 @@ However, the theory says little on what are the relevant attributes of the house
 <p>Note that the MSE is once more reduced. What about if we include some non linear variables, like <span class="math inline">\(age\)</span> and <span class="math inline">\(age^2\)</span>?. Then the MSE for model 3 goes from  to . In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.</p>
 </div>
 <div id="non-linear-models" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Non-linear models</h3>
+<h3><span class="header-section-number">3.2.3</span> Non-linear models</h3>
 <p>In practice empirical researches have recognized that hedonic house functions are likely to be nonlinear in structural characteristics, specially when it comes to continuous measures of location variables such as distance from the city center <span class="citation">(<span class="citeproc-not-found" data-reference-id="mcmillen2010estimation"><strong>???</strong></span>)</span>.</p>
 <ul>
 <li>Idea Show examples of other models</li>
@@ -268,7 +271,7 @@ However, the theory says little on what are the relevant attributes of the house
 <p>It is clear that we have a wide <em>pallete</em> of models to choose from. But the question is how do we choose from. And this is where supervised machine learning can give some guidance.</p>
 </div>
 <div id="comparison-on-the-models" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> Comparison on the models</h3>
+<h3><span class="header-section-number">3.2.4</span> Comparison on the models</h3>
 
 <div id="refs" class="references">
 <div>

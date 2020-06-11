@@ -31,9 +31,9 @@ summary(model1)
 In this case our prediction for the log price is the average train sample average
 
 
-\begin{align}\label{eq: house_price}
+$$
 \hat{y}=\hat{\beta_1}=\frac{\sum y_i}{n}=m
-\end{align}
+$$
 
 ```{r}
 coef(model1)
@@ -49,13 +49,13 @@ with(test,mean((lnprice-model1)^2))
 
 Then the $MSE=E(y-\hat{y})=E(y-m)=$\Sexpr{with(test,mean((lnprice-model1)^2))}. This is our starting point, then the question is how can we improve it.
 
-###Complexity
+### Complexity
 
 To improve our prediction we can start adding variables and thus \textit{building} $f$. The standard approach to build $f$ would be using a hedonic house price function derived directly from the theory of hedonic pricing ([@rosen1974hedonic]). In its basic form the hedonic price function is linear in the explanatory characteristics
 
-\begin{align}\label{eq: house_price}
+$$
 y=\beta_1+\beta_2 x_2 + \dots + \beta_K x_k +u
-\end{align}
+ $$
 
 where $y$ is ussually the log of the sale price, and $x_1  \dots x_k$ are attributes of the house, like  structural characteristics and it's location. So estimating an hedonic price function seems a good idea to start with. 
 However, the theory says little on what are the relevant attributes of the house. So we are going to procede with one foot in the theory and one foot in the data, to guide us in building $f$.
