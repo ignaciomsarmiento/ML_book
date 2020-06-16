@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Lab 1 Introduccion | 03-Promedios.utf8</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Lab 1 Introduccion | 03-Promedios.utf8" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Lab 1 Introduccion | 03-Promedios.utf8" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+
+
+
+<link rel="stylesheet" href="/Users/iggy/Dropbox/Phd Illinois/Research/ISLR_WALTER/ML_book_proposal/ML_book_codes/libs/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Statistical and Machine Learning for Economists and Social Scientists</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path=""><a href="#section-introduccion"><i class="fa fa-check"></i><b>1</b> Introduccion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<!--bookdown:title:end-->
+<!--bookdown:title:start-->
+<div id="section-introduccion" class="section level1">
+<h1><span class="header-section-number">Lab  1</span> Introduccion</h1>
+<p>Este post pone en <code>R</code> el #estadisticaXtuiter sobre promedios de <a href="https://twitter.com/wsosaescudero/status/896377415127232512">Walter</a>, el storify lo podes ver <a href="https://storify.com/wsosa/todo-es-un-maldito-promedio">aca</a></p>
+<p>Hoy vamos a por la estadistica mas basica de todas: el promedio. Que te persigue desde la primaria y el boletin de calificaciones. El promedio es el Humo Sobre el Agua de la estadistica. Es “la” herramienta que tenes que tener y pelar.</p>
+<p>Primero, la formulita (“el algoritmo”, como esta de moda decir ahora) la sabemos todos: suma todo (<span class="math inline">\(\sum X_i\)</span> )y dividi por numero de observaciones (n).</p>
+<p><span class="math display">\[
+Promedio = \frac{\sum X_i}{n}
+\]</span></p>
+<p>###Empecemos entonces hablando a favor del promedio.</p>
+<p>Despues lo hacemos bolsa, tranqui. Preliminares: ¿te acordas del Teorema de Pitágoras? El cuadrado de la hipotenusa es la suma de los cuadrados de los catetos. Entonces, la hipotenusa “mide” la raiz de la suma de los cuadrados de los catetos. Anotate esto que es importante. Empecemos.</p>
+<ol style="list-style-type: decimal">
+<li><p>“El promedio es el valor que esta mas cerca de todos los puntos”. ¿Qué significa “cerca”? ¡Cerca en el sentido de la distancia de Pitágoras! Je, te adverti. Entonces, el promedio es realmente el “valor del medio”</p></li>
+<li><p>“A mas datos el promedio se estabiliza rapido”. Viste que las encuestas de boca de urna a la hora nomas ya se quedan quietas?</p></li>
+</ol>
+<p>¿Sabes como se llama ese resultado? Ley de Grandes Números: cuando agregas informacion el promedio se estabiliza en el valor esperado. Ejemplo: cara = 1, ceca = 0. Si tiro una moneda “justa” muchas veces, el promedio de ceros y unos rapidamente se estabiliza en 0.5. Probalo aca, elegi el numero de veces que queres tirar la moneda y fijate que rapidamente se estabiliza alrededor de 0.5</p>
+<p><div class="shiny-input-panel">
+<div class="shiny-flow-layout">
+<div>
+<div class="form-group shiny-input-container">
+<label class="control-label" for="n">Veces q tiras la moneda</label>
+<input class="js-range-slider" id="n" data-min="1" data-max="400" data-from="1" data-step="1" data-grid="true" data-grid-num="9.975" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+</div>
+</div>
+</div>
+</div><div id="out0e66140157059997" class="shiny-plot-output" style="width: 100% ; height: 400px"></div></p>
+<ol start="3" style="list-style-type: decimal">
+<li><p>“Una proporcion es un promedio”. Pensa en la tasa de desempleo. Ponele 1 a todos los desempleados y 0 a los empleados. Saca promedio. Entonces, la tasa de pobreza, desempleo, etc. son promedios de ceros y unos. Todo lo que sabes de un promedio aplica a las proporciones</p></li>
+<li><p>“Casi todos los promedios posibles viven a unas 2 cuadras del promedio”.</p></li>
+</ol>
+<p>Ahora fijate en este resultado mágico: para una muestra razonablemente grande, los promedios se distribuyen en forma normal. Probala aumenta el tamaño de muestra, en rojo le impuse la distribucion normal.¿Sabes como se llama este resultado? Teorema Central del Limite.</p>
+<p><div class="shiny-input-panel">
+<div class="shiny-flow-layout">
+<div>
+<div class="form-group shiny-input-container">
+<label class="control-label" for="n2">Tamaño de la Muestra</label>
+<input class="js-range-slider" id="n2" data-min="10" data-max="4500" data-from="10" data-step="10" data-grid="true" data-grid-num="9.97777777777778" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+</div>
+</div>
+</div>
+</div><div id="outce21845013d203c5" class="shiny-plot-output" style="width: 100% ; height: 400px"></div></p>
+<p>¿Y las “cuadras”? El desvio estandar es una forma de contar “cerca-lejos”, cuadras, digamos. Distribucion normal: mas o menos el 95% de los datos esta “ a dos cuadras” del centro. Si, el desvio estandar es una cuadra. Compara pararte en el medio del campo de un concierto de rock, y despues en el desierto. En el segundo caso necesitas una “cuadra” mas larga para meter la proporcion de gente. ESO ES EL DESVIO ESTANDAR.Olvidate de la fucking formula del desvio standard y focaliza en la idea: “cuadras normales” Ergo, si usas el promedio, 2 veces el desvio estandar te da una medida de imprecision. Se llama intervalo de confianza. Viste eso de “sujeto a error estadistico de +/- 3.2%”? Es exactamente eso.</p>
+<p>#Resumen resumido sobre el promedio.
+1) Esta en el medio, se estabiliza pronto, es facil calcular cuan impreciso es, a traves del error estandar (cuadras) y la distribucion normal</p>
+<ol start="2" style="list-style-type: decimal">
+<li>La Ley de Grandes Numeros y el Teorema Central del Limite son el ancho de basto y de espadas del promedio.</li>
+</ol>
+<p>###Bueno, ahora peguemosle al promedio.</p>
+<p>Primero. Es muy poco confiable si las “cuadras” son largas (el desvio estandar). La edad promedio de mi esposa y yo da mas o menos lo mismo que la de mi difunta abuela y la de mi hijo. En el primer caso es mas representativa de mi esposa y yo, y en el segundo no. Es porque el desvio estandar es mucho mas alto. Entonces: SIEMPRE que aparece un promedio, pregunta cuanto mide la cuadra (el desvio estandar).</p>
+<p>Segundo. Es muy sensible a extremos. Pensa en el promedio entre 4,5 y 6 (da 5). Si llevas 6 a infinito, el promedio va …a infinito. Se lo llama “falta de robustez” a este problema. El Prof. Victor Yohai, de la UBA, es una autentica eminencia en esta cuestion. Un heroe. Solucion: la mediana es el “valor que está en el medio”. Tanto para 4,5 y 6, como para 4,5 y 10.000, 5 es el valor del medio. Momento, no era que el promedio era el del medio? Si. Fijate que hemos reemplazado qué entendemos por estar en el medio. En la media usamos una idea “cardinal” (4,5,6) y en la mediana, “ordinal” (1º, 2º, 3o). He ahí la trampa y la solución de la mediana. En el ejemplito, 5 es tan segundo en 4,5,6 como en 4,5,10.000. No pudimos “engañar” a la mediana, y si la media. La mediana es “mas robusta”</p>
+<p>Tercero, el promedio es “raro” cuando sus componentes se distribuyen muy asimétricamente. Pensá: el promedio entre un rico y un pobre no es alguien de clase media sino mas bien tirando a rico (el ejemplo del chiste de las piernas). Por eso es que es dificil de agarrar a la clase media (porque la distribucion del ingreso es muy asimetirca, muchos ricos pocos pobres)</p>
+<p><em>Entonces: si ves un promedio, fijate que no haya valores extremos, que la dispersion sea baja y que no hayan fuertes asimetrias.</em></p>
+<p><strong>Regla: todo promedio se merece un error estandar</strong></p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

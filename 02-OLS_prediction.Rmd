@@ -5,7 +5,7 @@
 
 In this lab we are going to focus on predicting house prices with the tools described in the chapter. The interest in predicting house prices is not new, but it's has proven to be a quite challenging problem where machine learning may have some interesting input. For example the  data science competitions company \href{https://www.kaggle.com}{Kaggle} is hosting a competition desined to improve \href{https://www.kaggle.com/c/zillow-prize-1}{Zillow's Home Value} estimates with a prize of one million dollars.
  
-We consider the data set included in the  \texttt{McSpatial package} \citep{mcmspatial} for \texttt{R}. The data includes sales prices, structural characteristics and geo-location of single-family homes on the Far North Side of Chicago sold in 1995 and 2005. We randomly divided the sample into a trianing and a testing sample.
+We consider the data set included in the  *McSpatial package* [@mcmspatial] for R. The data includes sales prices, structural characteristics and geo-location of single-family homes on the Far North Side of Chicago sold in 1995 and 2005. We randomly divided the sample into a trianing and a testing sample.
 
 
 
@@ -15,7 +15,7 @@ ls()
 ```
 
 ```{r}
-stargazer::stargazer(train, header=FALSE, type='latex')
+stargazer::stargazer(train, header=FALSE, type='text')
 ```
 
 ## Linear Regression
@@ -47,11 +47,11 @@ test$model1<-predict(model1,newdata = test)
 with(test,mean((lnprice-model1)^2))
 ```
 
-Then the $MSE=E(y-\hat{y})=E(y-m)=$\Sexpr{with(test,mean((lnprice-model1)^2))}. This is our starting point, then the question is how can we improve it.
+Then the $MSE=E(y-\hat{y})=E(y-m)=$ `r with(test,mean((lnprice-model1)^2))`. This is our starting point, then the question is how can we improve it.
 
 ### Complexity
 
-To improve our prediction we can start adding variables and thus \textit{building} $f$. The standard approach to build $f$ would be using a hedonic house price function derived directly from the theory of hedonic pricing ([@rosen1974hedonic]). In its basic form the hedonic price function is linear in the explanatory characteristics
+To improve our prediction we can start adding variables and thus *building* $f$. The standard approach to build $f$ would be using a hedonic house price function derived directly from the theory of hedonic pricing [@rosen1974hedonic]. In its basic form the hedonic price function is linear in the explanatory characteristics
 
 $$
 y=\beta_1+\beta_2 x_2 + \dots + \beta_K x_k +u
@@ -80,29 +80,63 @@ with(test,mean((lnprice-model3)^2))
 ```{r}
 model4<-lm(lnprice~bedrooms+bathrooms+centair+fireplace+brick+poly(age,2),data=train)
 test$model4<-predict(model4,newdata = test)
+with(test,mean((lnprice-model4)^2))
 ```
 
 
 
-Note that the MSE is once more reduced. What about if we include some non linear variables, like $age$ and $age^2$?. Then the MSE for model 3 goes from  \Sexpr{with(test,mean((lnprice-model3)^2))} to \Sexpr{with(test,mean((lnprice-model4)^2))}. In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.
+Note that the MSE is once more reduced. What about if we include some non linear variables, like $age$ and $age^2$?. Then the MSE for model 3 goes from  `r with(test,mean((lnprice-model3)^2))` to `r with(test,mean((lnprice-model4)^2))`. In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.
 
 
 
 
-### Non-linear models
+## Goodness-of-fit. In and out of sample performance
 
 
-In practice empirical researches have recognized that hedonic house functions are likely to be nonlinear in structural characteristics, specially when it comes to continuous measures of location variables such as distance from the city center [@mcmillen2010estimation].
+As stated before the mechanics of OLS give rise to a simple measure of *goodness of fit*: $R^2$. The $R^2$ takes values between 0 and 1, where 1 implies that the model *"fits"* the data *"perfectly"* and 0 is the opposite. This is a statistic that is ussually reported with regression results, but can also be easily calculated. By invoking the summary function on our estimated model 2 it reports the *Multiple R-squared*
 
 
-
-* Idea Show examples of other models
-  
-
-It is clear that we have a wide *pallete* of models to choose from. But the question is how do we choose from. And this is where supervised machine learning can give some guidance.
-
-### Comparison on the models
-
-
+```{r}
+summary(model2)
+```
+And we can obtain it by calling:
+```{r}
+summary(model2)$r.squared
+```
 
 
+But we can also calcuate it *"by hand"*.  We leverage the *sum of squares decomposition* 
+
+\begin{align}
+ TSS &= \sum y_i^2   \\
+ ESS &= \sum \hat y_i^2 \\
+ RSS &=\sum e_i^2 \\
+\end{align}
+
+
+where $y_i \equiv Y_i - \bar Y$, $\hat y_i \equiv \hat Y_i - \bar Y$ and $e_i$ are OLS residuals. 
+
+```{r}
+Ybar<-mean(train$lnprice)
+Y_i<-train$lnprice
+Y_hat<-predict(model2,newdata = train)
+e_i<-model2$residuals
+```
+We have now all the *ingredients*
+
+
+```{r}
+TSS<- sum((Y_i-Ybar)^2)
+ESS<- sum((Y_hat-Ybar)^2)
+RSS<- sum(e_i^2)
+R2<- ESS/TSS
+R2
+```
+
+Or another way
+```{r}
+R2<- 1-(RSS/TSS)
+R2
+```
+
+note that these approaches give the same result

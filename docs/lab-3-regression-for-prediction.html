@@ -10,7 +10,7 @@
 
   <meta property="og:title" content="Lab 3 Lab 3: Regression for prediction | Statistical and Machine Learning for Economists and Social Scientists" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://ignaciomsarmiento.github.io/" />
+  <meta property="og:url" content="https://ignaciomsarmiento.github.io/ML_book_codes/" />
   
   <meta property="og:description" content="This book contains the labs for Statistical and Machine Learning for Economists and Social Scientists" />
   <meta name="github-repo" content="ignaciomsarmiento/ML_book_codes-start" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Ignacio Sarmiento Barbieri" />
 
 
-<meta name="date" content="2020-06-15" />
+<meta name="date" content="2020-06-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,9 +138,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#linear-regression"><i class="fa fa-check"></i><b>3.2</b> Linear Regression</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#mse-and-regression"><i class="fa fa-check"></i><b>3.2.1</b> MSE and regression</a></li>
 <li class="chapter" data-level="3.2.2" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#complexity"><i class="fa fa-check"></i><b>3.2.2</b> Complexity</a></li>
-<li class="chapter" data-level="3.2.3" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#non-linear-models"><i class="fa fa-check"></i><b>3.2.3</b> Non-linear models</a></li>
-<li class="chapter" data-level="3.2.4" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#comparison-on-the-models"><i class="fa fa-check"></i><b>3.2.4</b> Comparison on the models</a></li>
 </ul></li>
+<li class="chapter" data-level="3.3" data-path="lab-3-regression-for-prediction.html"><a href="lab-3-regression-for-prediction.html#goodness-of-fit.-in-and-out-of-sample-performance"><i class="fa fa-check"></i><b>3.3</b> Goodness-of-fit. In and out of sample performance</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -167,41 +166,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="sec:introduction" class="section level2">
 <h2><span class="header-section-number">3.1</span> Introduction</h2>
 <p>In this lab we are going to focus on predicting house prices with the tools described in the chapter. The interest in predicting house prices is not new, but it’s has proven to be a quite challenging problem where machine learning may have some interesting input. For example the data science competitions company  is hosting a competition desined to improve  estimates with a prize of one million dollars.</p>
-<p>We consider the data set included in the   for . The data includes sales prices, structural characteristics and geo-location of single-family homes on the Far North Side of Chicago sold in 1995 and 2005. We randomly divided the sample into a trianing and a testing sample.</p>
+<p>We consider the data set included in the <em>McSpatial package</em> <span class="citation">(McMillen <a href="#ref-mcmspatial">2013</a>)</span> for R. The data includes sales prices, structural characteristics and geo-location of single-family homes on the Far North Side of Chicago sold in 1995 and 2005. We randomly divided the sample into a trianing and a testing sample.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">load</span>(<span class="st">&quot;house_data.rda&quot;</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">ls</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;test&quot;  &quot;train&quot;</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">stargazer<span class="op">::</span><span class="kw">stargazer</span>(train, <span class="dt">header=</span><span class="ot">FALSE</span>, <span class="dt">type=</span><span class="st">&#39;latex&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">stargazer<span class="op">::</span><span class="kw">stargazer</span>(train, <span class="dt">header=</span><span class="ot">FALSE</span>, <span class="dt">type=</span><span class="st">&#39;text&#39;</span>)</a></code></pre></div>
 <pre><code>## 
-## \begin{table}[!htbp] \centering 
-##   \caption{} 
-##   \label{} 
-## \begin{tabular}{@{\extracolsep{5pt}}lccccccc} 
-## \\[-1.8ex]\hline 
-## \hline \\[-1.8ex] 
-## Statistic &amp; \multicolumn{1}{c}{N} &amp; \multicolumn{1}{c}{Mean} &amp; \multicolumn{1}{c}{St. Dev.} &amp; \multicolumn{1}{c}{Min} &amp; \multicolumn{1}{c}{Pctl(25)} &amp; \multicolumn{1}{c}{Pctl(75)} &amp; \multicolumn{1}{c}{Max} \\ 
-## \hline \\[-1.8ex] 
-## year &amp; 2,704 &amp; 1,999.963 &amp; 5.001 &amp; 1,995 &amp; 1,995 &amp; 2,005 &amp; 2,005 \\ 
-## lnland &amp; 2,704 &amp; 8.305 &amp; 0.386 &amp; 6.633 &amp; 8.221 &amp; 8.509 &amp; 10.076 \\ 
-## lnbldg &amp; 2,704 &amp; 7.178 &amp; 0.287 &amp; 6.174 &amp; 6.985 &amp; 7.364 &amp; 8.356 \\ 
-## rooms &amp; 2,704 &amp; 5.780 &amp; 1.229 &amp; 2 &amp; 5 &amp; 6 &amp; 12 \\ 
-## bedrooms &amp; 2,704 &amp; 3.017 &amp; 0.744 &amp; 1 &amp; 3 &amp; 3 &amp; 7 \\ 
-## bathrooms &amp; 2,704 &amp; 1.418 &amp; 0.514 &amp; 1.000 &amp; 1.000 &amp; 1.500 &amp; 5.000 \\ 
-## centair &amp; 2,704 &amp; 0.350 &amp; 0.477 &amp; 0 &amp; 0 &amp; 1 &amp; 1 \\ 
-## fireplace &amp; 2,704 &amp; 0.159 &amp; 0.365 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 
-## brick &amp; 2,704 &amp; 0.670 &amp; 0.470 &amp; 0 &amp; 0 &amp; 1 &amp; 1 \\ 
-## garage1 &amp; 2,704 &amp; 0.308 &amp; 0.462 &amp; 0 &amp; 0 &amp; 1 &amp; 1 \\ 
-## garage2 &amp; 2,704 &amp; 0.449 &amp; 0.498 &amp; 0 &amp; 0 &amp; 1 &amp; 1 \\ 
-## dcbd &amp; 2,704 &amp; 9.697 &amp; 1.719 &amp; 5.245 &amp; 8.459 &amp; 10.975 &amp; 13.587 \\ 
-## rr &amp; 2,704 &amp; 0.161 &amp; 0.368 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 
-## yrbuilt &amp; 2,704 &amp; 1,935.040 &amp; 21.704 &amp; 1,876 &amp; 1,919.8 &amp; 1,952 &amp; 1,991 \\ 
-## latitude &amp; 2,704 &amp; 41.987 &amp; 0.015 &amp; 41.956 &amp; 41.975 &amp; 41.997 &amp; 42.022 \\ 
-## longitude &amp; 2,704 &amp; $-$87.745 &amp; 0.050 &amp; $-$87.834 &amp; $-$87.790 &amp; $-$87.699 &amp; $-$87.647 \\ 
-## lnprice &amp; 2,704 &amp; 12.405 &amp; 0.524 &amp; 10.166 &amp; 11.951 &amp; 12.835 &amp; 13.825 \\ 
-## age &amp; 2,704 &amp; 64.923 &amp; 22.325 &amp; 4 &amp; 48 &amp; 82 &amp; 129 \\ 
-## \hline \\[-1.8ex] 
-## \end{tabular} 
-## \end{table}</code></pre>
+## ====================================================================
+## Statistic   N     Mean    St. Dev.   Min   Pctl(25) Pctl(75)   Max  
+## --------------------------------------------------------------------
+## year      2,704 1,999.963  5.001    1,995   1,995    2,005    2,005 
+## lnland    2,704   8.305    0.386    6.633   8.221    8.509   10.076 
+## lnbldg    2,704   7.178    0.287    6.174   6.985    7.364    8.356 
+## rooms     2,704   5.780    1.229      2       5        6       12   
+## bedrooms  2,704   3.017    0.744      1       3        3        7   
+## bathrooms 2,704   1.418    0.514    1.000   1.000    1.500    5.000 
+## centair   2,704   0.350    0.477      0       0        1        1   
+## fireplace 2,704   0.159    0.365      0       0        0        1   
+## brick     2,704   0.670    0.470      0       0        1        1   
+## garage1   2,704   0.308    0.462      0       0        1        1   
+## garage2   2,704   0.449    0.498      0       0        1        1   
+## dcbd      2,704   9.697    1.719    5.245   8.459    10.975  13.587 
+## rr        2,704   0.161    0.368      0       0        0        1   
+## yrbuilt   2,704 1,935.040  21.704   1,876  1,919.8   1,952    1,991 
+## latitude  2,704  41.987    0.015   41.956   41.975   41.997  42.022 
+## longitude 2,704  -87.745   0.050   -87.834 -87.790  -87.699  -87.647
+## lnprice   2,704  12.405    0.524   10.166   11.951   12.835  13.825 
+## age       2,704  64.923    22.325     4       48       82      129  
+## --------------------------------------------------------------------</code></pre>
 </div>
 <div id="linear-regression" class="section level2">
 <h2><span class="header-section-number">3.2</span> Linear Regression</h2>
@@ -238,11 +230,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">test<span class="op">$</span>model1&lt;-<span class="kw">predict</span>(model1,<span class="dt">newdata =</span> test)</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">with</span>(test,<span class="kw">mean</span>((lnprice<span class="op">-</span>model1)<span class="op">^</span><span class="dv">2</span>))</a></code></pre></div>
 <pre><code>## [1] 0.2857339</code></pre>
-<p>Then the <span class="math inline">\(MSE=E(y-\hat{y})=E(y-m)=\)</span>. This is our starting point, then the question is how can we improve it.</p>
+<p>Then the <span class="math inline">\(MSE=E(y-\hat{y})=E(y-m)=\)</span> 0.2857339. This is our starting point, then the question is how can we improve it.</p>
 </div>
 <div id="complexity" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Complexity</h3>
-<p>To improve our prediction we can start adding variables and thus  <span class="math inline">\(f\)</span>. The standard approach to build <span class="math inline">\(f\)</span> would be using a hedonic house price function derived directly from the theory of hedonic pricing (<span class="citation">(<span class="citeproc-not-found" data-reference-id="rosen1974hedonic"><strong>???</strong></span>)</span>). In its basic form the hedonic price function is linear in the explanatory characteristics</p>
+<p>To improve our prediction we can start adding variables and thus <em>building</em> <span class="math inline">\(f\)</span>. The standard approach to build <span class="math inline">\(f\)</span> would be using a hedonic house price function derived directly from the theory of hedonic pricing <span class="citation">(Rosen <a href="#ref-rosen1974hedonic">1974</a>)</span>. In its basic form the hedonic price function is linear in the explanatory characteristics</p>
 <p><span class="math display">\[
 y=\beta_1+\beta_2 x_2 + \dots + \beta_K x_k +u
  \]</span></p>
@@ -259,26 +251,78 @@ However, the theory says little on what are the relevant attributes of the house
 <a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw">with</span>(test,<span class="kw">mean</span>((lnprice<span class="op">-</span>model3)<span class="op">^</span><span class="dv">2</span>))</a></code></pre></div>
 <pre><code>## [1] 0.255731</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">model4&lt;-<span class="kw">lm</span>(lnprice<span class="op">~</span>bedrooms<span class="op">+</span>bathrooms<span class="op">+</span>centair<span class="op">+</span>fireplace<span class="op">+</span>brick<span class="op">+</span><span class="kw">poly</span>(age,<span class="dv">2</span>),<span class="dt">data=</span>train)</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">test<span class="op">$</span>model4&lt;-<span class="kw">predict</span>(model4,<span class="dt">newdata =</span> test)</a></code></pre></div>
-<p>Note that the MSE is once more reduced. What about if we include some non linear variables, like <span class="math inline">\(age\)</span> and <span class="math inline">\(age^2\)</span>?. Then the MSE for model 3 goes from  to . In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.</p>
+<a class="sourceLine" id="cb17-2" data-line-number="2">test<span class="op">$</span>model4&lt;-<span class="kw">predict</span>(model4,<span class="dt">newdata =</span> test)</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="kw">with</span>(test,<span class="kw">mean</span>((lnprice<span class="op">-</span>model4)<span class="op">^</span><span class="dv">2</span>))</a></code></pre></div>
+<pre><code>## [1] 0.2565857</code></pre>
+<p>Note that the MSE is once more reduced. What about if we include some non linear variables, like <span class="math inline">\(age\)</span> and <span class="math inline">\(age^2\)</span>?. Then the MSE for model 3 goes from 0.255731 to 0.2565857. In this case the MSE gets slightly worse, showing how we are subject to the bias/variance trade off.</p>
 </div>
-<div id="non-linear-models" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> Non-linear models</h3>
-<p>In practice empirical researches have recognized that hedonic house functions are likely to be nonlinear in structural characteristics, specially when it comes to continuous measures of location variables such as distance from the city center <span class="citation">(<span class="citeproc-not-found" data-reference-id="mcmillen2010estimation"><strong>???</strong></span>)</span>.</p>
-<ul>
-<li>Idea Show examples of other models</li>
-</ul>
-<p>It is clear that we have a wide <em>pallete</em> of models to choose from. But the question is how do we choose from. And this is where supervised machine learning can give some guidance.</p>
 </div>
-<div id="comparison-on-the-models" class="section level3">
-<h3><span class="header-section-number">3.2.4</span> Comparison on the models</h3>
+<div id="goodness-of-fit.-in-and-out-of-sample-performance" class="section level2">
+<h2><span class="header-section-number">3.3</span> Goodness-of-fit. In and out of sample performance</h2>
+<p>As stated before the mechanics of OLS give rise to a simple measure of <em>goodness of fit</em>: <span class="math inline">\(R^2\)</span>. The <span class="math inline">\(R^2\)</span> takes values between 0 and 1, where 1 implies that the model <em>“fits”</em> the data <em>“perfectly”</em> and 0 is the opposite. This is a statistic that is ussually reported with regression results, but can also be easily calculated. By invoking the summary function on our estimated model 2 it reports the <em>Multiple R-squared</em></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">summary</span>(model2)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = lnprice ~ bedrooms, data = train)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.23830 -0.45220  0.02506  0.43053  1.42131 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 12.20177    0.04195 290.886  &lt; 2e-16 ***
+## bedrooms     0.06746    0.01350   4.998 6.16e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.5221 on 2702 degrees of freedom
+## Multiple R-squared:  0.009161,   Adjusted R-squared:  0.008794 
+## F-statistic: 24.98 on 1 and 2702 DF,  p-value: 6.16e-07</code></pre>
+<p>And we can obtain it by calling:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">summary</span>(model2)<span class="op">$</span>r.squared</a></code></pre></div>
+<pre><code>## [1] 0.009160653</code></pre>
+<p>But we can also calcuate it <em>“by hand”</em>. We leverage the <em>sum of squares decomposition</em></p>
+<p><span class="math display">\[\begin{align}
+ TSS &amp;= \sum y_i^2   \\
+ ESS &amp;= \sum \hat y_i^2 \\
+ RSS &amp;=\sum e_i^2 \\
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(y_i \equiv Y_i - \bar Y\)</span>, <span class="math inline">\(\hat y_i \equiv \hat Y_i - \bar Y\)</span> and <span class="math inline">\(e_i\)</span> are OLS residuals.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">Ybar&lt;-<span class="kw">mean</span>(train<span class="op">$</span>lnprice)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">Y_i&lt;-train<span class="op">$</span>lnprice</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">Y_hat&lt;-<span class="kw">predict</span>(model2,<span class="dt">newdata =</span> train)</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">e_i&lt;-model2<span class="op">$</span>residuals</a></code></pre></div>
+<p>We have now all the <em>ingredients</em></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">TSS&lt;-<span class="st"> </span><span class="kw">sum</span>((Y_i<span class="op">-</span>Ybar)<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">ESS&lt;-<span class="st"> </span><span class="kw">sum</span>((Y_hat<span class="op">-</span>Ybar)<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">RSS&lt;-<span class="st"> </span><span class="kw">sum</span>(e_i<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">R2&lt;-<span class="st"> </span>ESS<span class="op">/</span>TSS</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">R2</a></code></pre></div>
+<pre><code>## [1] 0.009160653</code></pre>
+<p>Or another way</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">R2&lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>(RSS<span class="op">/</span>TSS)</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">R2</a></code></pre></div>
+<pre><code>## [1] 0.009160653</code></pre>
+<p>note that these approaches give the same result</p>
 
 <div id="refs" class="references">
 <div>
-<p>Xie, Yihui. 2015. <em>Dynamic Documents with R and Knitr</em>. 2nd ed. Boca Raton, Florida: Chapman; Hall/CRC. <a href="http://yihui.name/knitr/">http://yihui.name/knitr/</a>.</p>
+<p>McMillen, Daniel. 2013. <em>McSpatial: Nonparametric Spatial Data Analysis</em>. <a href="https://CRAN.R-project.org/package=McSpatial">https://CRAN.R-project.org/package=McSpatial</a>.</p>
+</div>
+<div>
+<p>Rosen, Sherwin. 1974. “Hedonic Prices and Implicit Markets: Product Differentiation in Pure Competition.” <em>Journal of Political Economy</em> 82 (1). The University of Chicago Press: 34–55.</p>
 </div>
 </div>
 </div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-mcmspatial">
+<p>McMillen, Daniel. 2013. <em>McSpatial: Nonparametric Spatial Data Analysis</em>. <a href="https://CRAN.R-project.org/package=McSpatial">https://CRAN.R-project.org/package=McSpatial</a>.</p>
+</div>
+<div id="ref-rosen1974hedonic">
+<p>Rosen, Sherwin. 1974. “Hedonic Prices and Implicit Markets: Product Differentiation in Pure Competition.” <em>Journal of Political Economy</em> 82 (1). The University of Chicago Press: 34–55.</p>
 </div>
 </div>
             </section>
