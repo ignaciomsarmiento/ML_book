@@ -18,7 +18,7 @@ description: "This book contains the labs for Statistical and Machine Learning f
 ## How do I get **R**?
 Get it from [Cran](https://cran.r-project.org/),  [RStudio](https://rstudio.com/) is a great IDE with a lot of cool features
 
-## Why **R**
+## Why **R**?
 
 Because it is *free*!. Not only *free* as beer, but what is more important, *free* as freedom of speech.
 
