@@ -1,5 +1,5 @@
 
-# Lab 3: Regression for prediction
+#  Regression for prediction
 
 ## Introduction {#sec:introduction}
 
