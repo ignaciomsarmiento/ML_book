@@ -12,7 +12,19 @@ url: 'https://ignaciomsarmiento.github.io/ML_book_codes/'
 description: "This book contains the labs for Statistical and Machine Learning for Economists and Social Scientists"
 ---
 
-# Lab 1: Introduction to R
+#  Introduction to R
 
-Introduction to R
+
+## How do I get **R**?
+Get it from [Cran](https://cran.r-project.org/),  [RStudio](https://rstudio.com/) is a great IDE with a lot of cool features
+
+## Why **R**
+
+Because it is *free*!. Not only *free* as beer, but what is more important, *free* as freedom of speech.
+
+## First **R** Steps
+
+What’s a package?  A package is a collection of R software that augments insome way the basic functionality of R, that is it is a way of going “beyondR.”  For  example,  the `quantreg package`  is  a  collection  of  functions  to  do quantile regression.  There were 15,794 packages on CRAN as of June 2021.
+
+How to use a package?  Downloading and installing a package isn’t enough,you need to tell R that you would like to use it, for this you can either type: `require(pname)` or `library(pname)`.  I prefer the former.
 
