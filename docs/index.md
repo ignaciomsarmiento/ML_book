@@ -1,6 +1,6 @@
 --- 
 title: "Statistical and Machine Learning for Economists and Social Scientists"
-author: "Ignacio Sarmiento Barbieri"
+author: "Walter Sosa Escudero and Ignacio Sarmiento Barbieri"
 date: "2020-06-16"
 site: bookdown::bookdown_site
 documentclass: book
