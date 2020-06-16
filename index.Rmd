@@ -8,7 +8,7 @@ bibliography: [book.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: ignaciomsarmiento/ML_book_codes-start
-url: 'https://ignaciomsarmiento.github.io/'
+url: 'https://ignaciomsarmiento.github.io/ML_book_codes/'
 description: "This book contains the labs for Statistical and Machine Learning for Economists and Social Scientists"
 ---
 
