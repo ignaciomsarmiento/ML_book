@@ -1,7 +1,7 @@
 --- 
 title: "Statistical and Machine Learning for Economists and Social Scientists"
 author: "Ignacio Sarmiento Barbieri"
-date: "`r Sys.Date()`"
+date: "2020-06-15"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib]
