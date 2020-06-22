@@ -14,6 +14,7 @@ description: "This book contains the labs for Statistical and Machine Learning f
 
 #  Introduction to R
 
+*http://www.econ.uiuc.edu/~lab/workshop/yaRfaq.pdf
 
 ## How do I get **R**?
 Get it from [Cran](https://cran.r-project.org/),  [RStudio](https://rstudio.com/) is a great IDE with a lot of cool features
